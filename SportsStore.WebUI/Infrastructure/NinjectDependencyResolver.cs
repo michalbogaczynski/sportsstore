@@ -4,6 +4,9 @@ using System.Linq;
 using System.Web;
 using Ninject;
 using System.Web.Mvc;
+using Moq;
+using SportsStore.Domain.Abstract;
+using SportsStore.Domain.Entities;
 
 namespace SportsStore.WebUI.Infrastructure
 {
@@ -29,7 +32,15 @@ namespace SportsStore.WebUI.Infrastructure
 
         private void AddBindings()
         {
-            //umieść dodatkowe powiązania
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(new List<Product>
+            {
+                new Product {Name = "Piłka nożna", Price = 25},
+                new Product {Name = "Deska surfingowa", Price = 179},
+                new Product {Name = "Buty do biegania", Price = 95}
+            });
+
+            kernel.Bind<IProductRepository>().ToConstant(mock.Object);
         }
     }
 }
